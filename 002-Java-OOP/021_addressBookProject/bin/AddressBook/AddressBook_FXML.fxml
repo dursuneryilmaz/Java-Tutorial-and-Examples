@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane fx:id="Pane" focusTraversable="true" prefHeight="158.0" prefWidth="394.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddressBook.FXML_Controller">
+    <children>
+        <Button fx:id="btnAdd" layoutX="15.0" layoutY="123.0" onAction="#handleBtnAddAction" text="Add" />
+        <Button fx:id="btnPrev" layoutX="154.0" layoutY="123.0" onAction="#handleBtnPrevAction" text="Previous" />
+        <Button fx:id="btnLast" layoutX="221.0" layoutY="123.0" onAction="#handleBtnLastAction" text="Last" />
+        <Button fx:id="btnUpdate" layoutX="266.0" layoutY="123.0" onAction="#handleBtnUpdateAction" text="Update" />
+        <Button fx:id="btnSearch" layoutX="328.0" layoutY="123.0" onAction="#handleBtnSearchAction" text="Search" />
+        <Button fx:id="btnFirst" layoutX="59.0" layoutY="123.0" onAction="#handleBtnFirstAction" text="First" />
+        <Button fx:id="btnNext" layoutX="104.0" layoutY="123.0" onAction="#handleBtnNextAction" text="Next" />
+        
+        <Label fx:id="Lbl_id" layoutX="19.0" layoutY="14.0" text="ID" />
+        <Label fx:id="Lbl_name" layoutX="19.0" layoutY="39.0" text="Name" />
+        <Label fx:id="Lbl_street" layoutX="19.0" layoutY="64.0" text="Street" />
+        <Label fx:id="Lbl_city" layoutX="19.0" layoutY="89.0" text="City" />
+        <Label fx:id="Lbl_zip" layoutX="304.0" layoutY="89.0" text="Zip" />
+        <Label fx:id="Lbl_gender" layoutX="217.0" layoutY="89.0" text="Gender" />
+        
+        <TextField fx:id="tf_id" layoutX="58.0" layoutY="10.0" prefHeight="25.0" prefWidth="320.0" promptText="0001" />
+        <TextField fx:id="tf_name" layoutX="58.0" layoutY="35.0" prefHeight="25.0" prefWidth="320.0" promptText="Dursun ERYILMAZ" />
+        <TextField fx:id="tf_street" layoutX="58.0" layoutY="60.0" prefHeight="25.0" prefWidth="320.0" promptText="Adnan Menders Uni." />
+        <TextField fx:id="tf_city" layoutX="58.0" layoutY="85.0" promptText="Aydın" />
+        <TextField fx:id="tf_gender" layoutX="258.0" layoutY="85.0" prefHeight="25.0" prefWidth="41.0" promptText="M" />
+        <TextField fx:id="tf_zip" layoutX="327.0" layoutY="85.0" prefHeight="25.0" prefWidth="51.0" promptText="09100" />  
+    </children>
+</Pane>
