@@ -9,17 +9,25 @@
 	   		http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 	<!-- Change the class of database key to provide different type of a class. 
-		Control inversion via applicationContext.xml -->
-	<bean id="database" class="springIntro.MsSqlCustomerDal"></bean>
+		Control inversion via applicationContext.xml 
+		<bean id="database" class="springIntro.MsSqlCustomerDal"></bean>
+	 -->
 
-<!--  dependency injection with constructor arg 
-	<bean id="service2" class="springIntro.CustomerManager">
+	<!-- dependency injection with constructor arg 
+	<bean id="service2" class="springIntro.CustomerManager"> 
 		<constructor-arg ref="database" />
 	</bean>
--->
+     -->
+	
 	<!-- Setter injection -->
 	<bean id="service" class="springIntro.CustomerManager">
 		<property name="customerDal" ref="database"></property>
 	</bean>
 
+	<!-- String value injection. When desired class changes it's property's values must change. -->
+	<bean id="database" class="springIntro.OracleCustomerDal">
+		<property name="connectionString"
+			value='dbc:oracle:thin:@prodHost:1521:ORCL'></property>
+	</bean>
+	
 </beans>
