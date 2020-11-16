@@ -19,15 +19,25 @@
 	</bean>
      -->
 	
+	<!-- String value injection. When desired class changes it's property's values must change. 
+	<bean id="database" class="springIntro.OracleCustomerDal">
+		<property name="connectionString"
+			value='jdbc:oracle:thin:@prodHost:1521:ORCL'></property>
+	</bean>
+	-->
+	
 	<!-- Setter injection -->
 	<bean id="service" class="springIntro.CustomerManager">
 		<property name="customerDal" ref="database"></property>
 	</bean>
-
-	<!-- String value injection. When desired class changes it's property's values must change. -->
-	<bean id="database" class="springIntro.OracleCustomerDal">
+	
+	<!-- properties file usage --> 
+	<context:property-placeholder location="classpath:values.properties"/>
+	
+	<bean id="database" class="springIntro.MySqlCustomerDal">
 		<property name="connectionString"
-			value='dbc:oracle:thin:@prodHost:1521:ORCL'></property>
+			value='${database.mysqlConnectionString}'></property>
 	</bean>
+	
 	
 </beans>
