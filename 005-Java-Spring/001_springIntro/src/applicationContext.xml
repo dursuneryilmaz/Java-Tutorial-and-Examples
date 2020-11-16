@@ -11,4 +11,9 @@
 	<!-- Change the class of database key to provide different type of a class. 
 		Control inversion via applicationContext.xml -->
 	<bean id="database" class="springIntro.OracleCustomerDal"></bean>
+
+	<!-- dependency injection with constructor arg  -->
+	<bean id="service" class="springIntro.CustomerManager">
+		<constructor-arg ref="database"/>
+	</bean>
 </beans>
