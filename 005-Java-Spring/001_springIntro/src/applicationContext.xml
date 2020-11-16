@@ -10,10 +10,16 @@
 
 	<!-- Change the class of database key to provide different type of a class. 
 		Control inversion via applicationContext.xml -->
-	<bean id="database" class="springIntro.OracleCustomerDal"></bean>
+	<bean id="database" class="springIntro.MsSqlCustomerDal"></bean>
 
-	<!-- dependency injection with constructor arg  -->
-	<bean id="service" class="springIntro.CustomerManager">
-		<constructor-arg ref="database"/>
+<!--  dependency injection with constructor arg 
+	<bean id="service2" class="springIntro.CustomerManager">
+		<constructor-arg ref="database" />
 	</bean>
+-->
+	<!-- Setter injection -->
+	<bean id="service" class="springIntro.CustomerManager">
+		<property name="customerDal" ref="database"></property>
+	</bean>
+
 </beans>
