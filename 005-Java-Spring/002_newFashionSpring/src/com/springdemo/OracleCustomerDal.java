@@ -1,10 +1,13 @@
 package com.springdemo;
 
+import org.springframework.beans.factory.annotation.Value;
+
 // import org.springframework.stereotype.Component;
 
 // Annotation
 //@Component("database")
 public class OracleCustomerDal implements ICustomerDal {
+	@Value("${database.oracleConnectionString}") // property injection 
 	String connectionString;
 
 	public String getConnectionString() {

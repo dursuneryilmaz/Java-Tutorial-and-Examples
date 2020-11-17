@@ -1,6 +1,9 @@
 package com.springdemo;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class MySqlCustomerDal implements ICustomerDal {
+	@Value("${database.mysqlConnectionString}") // property injection 
 	String connectionString;
 
 	public String getConnectionString() {
