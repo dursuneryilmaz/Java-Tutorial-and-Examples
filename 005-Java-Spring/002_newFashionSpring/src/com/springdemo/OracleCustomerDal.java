@@ -1,9 +1,9 @@
 package com.springdemo;
 
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 
 // Annotation
-@Component("database")
+//@Component("database")
 public class OracleCustomerDal implements ICustomerDal {
 	String connectionString;
 
