@@ -11,4 +11,10 @@ public class IocConfig {
 	public ICustomerDal database() {
 		return new OracleCustomerDal();
 	}
+	
+	@Bean // Bean definition
+	public ICustomerService service() {
+		// dependency injection in class config
+		return new CustomerManager(database());
+	}
 }

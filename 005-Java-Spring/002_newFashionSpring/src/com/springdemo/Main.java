@@ -20,7 +20,7 @@ public class Main {
 		// class config file usage
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(IocConfig.class);
 
-		ICustomerDal customerDal = context.getBean("database", ICustomerDal.class);
-		customerDal.add();
+		ICustomerService customerService = context.getBean("service", ICustomerService.class);
+		customerService.add();
 	}
 }
