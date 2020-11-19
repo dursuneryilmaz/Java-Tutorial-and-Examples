@@ -9,4 +9,9 @@ public class ProductsController {
 	public String get() {
 		return "Laptop";
 	}
+	
+	@GetMapping("/product")
+	public String getProduct() {
+		return "Laptop Test";
+	}
 }
