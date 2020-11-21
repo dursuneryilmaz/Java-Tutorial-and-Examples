@@ -43,6 +43,6 @@ public class CityController {
 
 	@PostMapping("/delete")
 	public void delete(@RequestBody City city) {
-		cityService.add(city);
+		cityService.delete(city);
 	}
 }
