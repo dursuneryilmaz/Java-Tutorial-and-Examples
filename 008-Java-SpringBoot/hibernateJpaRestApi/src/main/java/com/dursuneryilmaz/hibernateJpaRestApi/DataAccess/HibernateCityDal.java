@@ -13,7 +13,7 @@ import com.dursuneryilmaz.hibernateJpaRestApi.Entities.City;
 @Repository
 public class HibernateCityDal implements ICityDal {
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	public HibernateCityDal(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -23,26 +23,33 @@ public class HibernateCityDal implements ICityDal {
 	@Transactional // Aspect Oriented Programming, Session's Unit of Work handling
 	public List<City> getAll() {
 		Session session = entityManager.unwrap(Session.class);
-		List<City> cities = session.createQuery("from City",City.class).getResultList();
+		List<City> cities = session.createQuery("from City", City.class).getResultList();
 		return cities;
 	}
 
 	@Override
 	public void add(City city) {
-		// TODO Auto-generated method stub
-
+		Session session = entityManager.unwrap(Session.class);
+		session.save(city);
 	}
 
 	@Override
 	public void update(City city) {
-		// TODO Auto-generated method stub
-
+		Session session = entityManager.unwrap(Session.class);
+		session.saveOrUpdate(city);
 	}
 
 	@Override
 	public void delete(City city) {
-		// TODO Auto-generated method stub
+		Session session = entityManager.unwrap(Session.class);
+		session.delete(city);
+	}
 
+	@Override
+	public City getById(int id) {
+		Session session = entityManager.unwrap(Session.class);
+		City city = session.get(City.class, id);
+		return city;
 	}
 
 }
