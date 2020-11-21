@@ -10,7 +10,7 @@ import com.dursuneryilmaz.hibernateJpaRestApi.Entities.City;
 @Service
 public class CityManager implements ICityService {
 	private ICityDal cityDal;
-	
+
 	@Autowired
 	public CityManager(ICityDal cityDal) {
 		this.cityDal = cityDal;
@@ -19,28 +19,36 @@ public class CityManager implements ICityService {
 	@Override
 	@Transactional
 	public List<City> getAll() {
-		return cityDal.getAll();
+		// business logic
+		return this.cityDal.getAll();
 	}
 
 	@Override
 	@Transactional
 	public void add(City city) {
-		// TODO Auto-generated method stub
-		
+		// business logic
+		this.cityDal.add(city);
+
 	}
 
 	@Override
 	@Transactional
 	public void update(City city) {
-		// TODO Auto-generated method stub
-		
+		// business logic
+		this.cityDal.update(city);
 	}
 
 	@Override
 	@Transactional
 	public void delete(City city) {
-		// TODO Auto-generated method stub
-		
+		// business logic
+		this.cityDal.delete(city);
+	}
+
+	@Override
+	public City getById(int id) {
+		// business logic
+		return this.cityDal.getById(id);
 	}
 
 }
