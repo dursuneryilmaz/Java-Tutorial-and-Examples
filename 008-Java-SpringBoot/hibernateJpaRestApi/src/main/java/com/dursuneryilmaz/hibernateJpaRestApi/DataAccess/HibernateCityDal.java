@@ -4,11 +4,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dursuneryilmaz.hibernateJpaRestApi.Entities.City;
 
 // Hibernate configuration handled by JPA(Java Persistance API)
+@Repository
 public class HibernateCityDal implements ICityDal {
 	private EntityManager entityManager;
 	

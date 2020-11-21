@@ -9,21 +9,23 @@ public class City {
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "countrycode")
 	private String countryCode;
-	
+
 	@Column(name = "district")
 	private String district;
-	
+
 	@Column(name = "population")
 	private int population;
 
+	public City() {
+	}
+
 	public City(int id, String name, String countryCode, String district, int population) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.countryCode = countryCode;
