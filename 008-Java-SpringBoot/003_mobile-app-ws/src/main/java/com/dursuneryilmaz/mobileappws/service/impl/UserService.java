@@ -1,6 +1,6 @@
 package com.dursuneryilmaz.mobileappws.service.impl;
 
-import com.dursuneryilmaz.mobileappws.UserRepository;
+import com.dursuneryilmaz.mobileappws.repository.UserRepository;
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
