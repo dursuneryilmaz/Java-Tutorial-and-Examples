@@ -1,7 +1,7 @@
-package com.dursuneryilmaz.mobileappws.controller;
+package com.dursuneryilmaz.mobileappws.ui.controller;
 
-import com.dursuneryilmaz.mobileappws.model.request.UserDetailsRequestModel;
-import com.dursuneryilmaz.mobileappws.model.response.UserRest;
+import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
+import com.dursuneryilmaz.mobileappws.ui.model.response.UserRest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

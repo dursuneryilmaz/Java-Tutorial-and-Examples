@@ -1,4 +1,4 @@
-package com.dursuneryilmaz.mobileappws.model.response;
+package com.dursuneryilmaz.mobileappws.ui.model.response;
 
 public class UserRest {
     private String userId; // different from db user id

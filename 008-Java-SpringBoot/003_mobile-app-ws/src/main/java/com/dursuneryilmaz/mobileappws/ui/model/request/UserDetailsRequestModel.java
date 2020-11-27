@@ -1,4 +1,4 @@
-package com.dursuneryilmaz.mobileappws.model.request;
+package com.dursuneryilmaz.mobileappws.ui.model.request;
 
 public class UserDetailsRequestModel {
     private String firstName;
