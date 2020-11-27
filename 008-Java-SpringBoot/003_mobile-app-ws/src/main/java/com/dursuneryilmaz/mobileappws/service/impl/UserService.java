@@ -1,6 +1,6 @@
 package com.dursuneryilmaz.mobileappws.service.impl;
 
-import com.dursuneryilmaz.mobileappws.repository.UserRepository;
+import com.dursuneryilmaz.mobileappws.repository.IUserRepository;
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements IUserService {
     @Autowired
-    UserRepository userRepository;
+    IUserRepository IUserRepository;
     @Autowired
     Utils utils = new Utils();
     @Autowired
@@ -24,7 +24,7 @@ public class UserService implements IUserService {
     @Override
     public UserDto createUser(UserDto user) {
         // check users by email to prevent duplication
-        if (userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
+        if (IUserRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
         // encapsulate the db user id from transporting between layers
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
@@ -35,7 +35,7 @@ public class UserService implements IUserService {
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 
-        UserEntity storedUserDetails = userRepository.save(userEntity);
+        UserEntity storedUserDetails = IUserRepository.save(userEntity);
         UserDto returnedValue = new UserDto();
         BeanUtils.copyProperties(storedUserDetails, returnedValue);
 
