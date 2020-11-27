@@ -4,6 +4,7 @@ import com.dursuneryilmaz.mobileappws.UserRepository;
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
+import com.dursuneryilmaz.mobileappws.shared.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,17 +13,22 @@ import org.springframework.stereotype.Service;
 public class UserService implements IUserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    Utils utils = new Utils();
+
     @Override
     public UserDto createUser(UserDto user) {
         // check users by email to prevent duplication
-        if(userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
+        if (userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
         // encapsulate the db user id from transporting between layers
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
 
         //hardcode required fields for test
+        String publicUserId = utils.generateUserId(32);
+        userEntity.setUserId(publicUserId);
         userEntity.setEncryptedPassword("test");
-        userEntity.setUserId("test");
+
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnedValue = new UserDto();
