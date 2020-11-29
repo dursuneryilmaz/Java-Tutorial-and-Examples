@@ -1,6 +1,6 @@
 package com.dursuneryilmaz.mobileappws.service.impl;
 
-import com.dursuneryilmaz.mobileappws.repository.IUserRepository;
+import com.dursuneryilmaz.mobileappws.io.repository.IUserRepository;
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 @Service

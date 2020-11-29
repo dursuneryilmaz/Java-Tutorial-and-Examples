@@ -1,4 +1,4 @@
-package com.dursuneryilmaz.mobileappws.repository;
+package com.dursuneryilmaz.mobileappws.io.repository;
 
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
