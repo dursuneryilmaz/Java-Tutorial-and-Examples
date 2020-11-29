@@ -7,6 +7,7 @@ import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.shared.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +21,7 @@ public class UserService implements IUserService {
     @Autowired
     IUserRepository userRepository;
     @Autowired
-    Utils utils = new Utils();
+    Utils utils;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -42,6 +43,16 @@ public class UserService implements IUserService {
         UserDto returnedValue = new UserDto();
         BeanUtils.copyProperties(storedUserDetails, returnedValue);
 
+        return returnedValue;
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        UserDto returnedValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnedValue);
         return returnedValue;
     }
 
