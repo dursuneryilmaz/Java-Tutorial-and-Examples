@@ -57,6 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
+        // it can be Autowired or not ?
         IUserService userService = (IUserService) SpringApplicationContext.getBean("userService");
         UserDto userDto = userService.getUserByEmail(userName);
         // add jwt and user public id to response header
