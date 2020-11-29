@@ -7,15 +7,18 @@ import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.shared.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
-    IUserRepository IUserRepository;
+    IUserRepository userRepository;
     @Autowired
     Utils utils = new Utils();
     @Autowired
@@ -24,7 +27,7 @@ public class UserService implements IUserService {
     @Override
     public UserDto createUser(UserDto user) {
         // check users by email to prevent duplication
-        if (IUserRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
+        if (userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
         // encapsulate the db user id from transporting between layers
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
@@ -35,7 +38,7 @@ public class UserService implements IUserService {
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 
-        UserEntity storedUserDetails = IUserRepository.save(userEntity);
+        UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnedValue = new UserDto();
         BeanUtils.copyProperties(storedUserDetails, returnedValue);
 
@@ -43,7 +46,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
     }
 }
