@@ -3,10 +3,10 @@ package com.dursuneryilmaz.mobileappws.ui.controller;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
+import com.dursuneryilmaz.mobileappws.ui.model.response.ErrorMessages;
 import com.dursuneryilmaz.mobileappws.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +29,12 @@ public class UserController {
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetail) {
-
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetail) throws Exception {
         UserRest returnValue = new UserRest();
-        UserDto userDto = new UserDto();
 
+        if (userDetail.getFirstName().isEmpty())
+            throw new Exception(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+        UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetail, userDto);
         UserDto createdUser = userService.createUser(userDto);
         BeanUtils.copyProperties(createdUser, returnValue);
