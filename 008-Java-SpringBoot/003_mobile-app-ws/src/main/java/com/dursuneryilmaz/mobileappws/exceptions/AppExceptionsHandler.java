@@ -12,10 +12,21 @@ import java.util.Date;
 
 @ControllerAdvice
 public class AppExceptionsHandler {
+    //handles specific UserServiceException
     @ExceptionHandler(value = {UserServiceException.class})
     public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
         //this method can be return custom exception object which will be converted json or xml
         ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // handles unhandled other exceptions
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
+        //this method can be return custom exception object which will be converted json or xml
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }

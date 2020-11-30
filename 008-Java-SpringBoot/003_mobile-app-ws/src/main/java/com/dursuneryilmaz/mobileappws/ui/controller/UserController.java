@@ -34,7 +34,8 @@ public class UserController {
         UserRest returnValue = new UserRest();
 
         if (userDetail.getFirstName().isEmpty())
-            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+            // check specifically unhandled exception handled or not
+            throw new NullPointerException("dummy text object is null");
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetail, userDto);
         UserDto createdUser = userService.createUser(userDto);
