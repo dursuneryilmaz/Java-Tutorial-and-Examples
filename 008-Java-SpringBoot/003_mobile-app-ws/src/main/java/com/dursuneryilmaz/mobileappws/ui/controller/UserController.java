@@ -1,5 +1,6 @@
 package com.dursuneryilmaz.mobileappws.ui.controller;
 
+import com.dursuneryilmaz.mobileappws.exceptions.UserServiceException;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
@@ -33,7 +34,7 @@ public class UserController {
         UserRest returnValue = new UserRest();
 
         if (userDetail.getFirstName().isEmpty())
-            throw new Exception(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetail, userDto);
         UserDto createdUser = userService.createUser(userDto);
