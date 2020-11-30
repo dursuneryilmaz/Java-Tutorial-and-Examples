@@ -6,6 +6,7 @@ import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.dursuneryilmaz.mobileappws.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,9 +15,12 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @GetMapping()
-    public String getUser() {
-        return "get user was called";
+    @GetMapping(path = "/{id}")
+    public UserRest getUser(@PathVariable String id) {
+        UserRest returnValue = new UserRest();
+        UserDto userDto = userService.getUserByUserId(id);
+        BeanUtils.copyProperties(userDto, returnValue);
+        return returnValue;
     }
 
     @PostMapping()
