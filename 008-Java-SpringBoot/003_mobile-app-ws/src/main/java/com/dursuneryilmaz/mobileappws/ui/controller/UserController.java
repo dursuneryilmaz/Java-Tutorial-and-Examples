@@ -4,8 +4,7 @@ import com.dursuneryilmaz.mobileappws.exceptions.UserServiceException;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
-import com.dursuneryilmaz.mobileappws.ui.model.response.ErrorMessages;
-import com.dursuneryilmaz.mobileappws.ui.model.response.UserRest;
+import com.dursuneryilmaz.mobileappws.ui.model.response.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,13 +51,18 @@ public class UserController {
 
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetail, userDto);
-        UserDto updatedUser = userService.updateUser(id,userDto);
+        UserDto updatedUser = userService.updateUser(id, userDto);
         BeanUtils.copyProperties(updatedUser, returnValue);
         return returnValue;
     }
 
-    @DeleteMapping()
-    public String deleteUser() {
-        return "delete user called";
+    @DeleteMapping(path = "/{id}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel returnedValue = new OperationStatusModel();
+        returnedValue.setOperationName(RequestOperationName.DELETE.name());
+        userService.deleteUser(id);
+        returnedValue.setOperationStatus(RequestOperationStatus.SUCCESS.name());
+        return returnedValue;
     }
 }
