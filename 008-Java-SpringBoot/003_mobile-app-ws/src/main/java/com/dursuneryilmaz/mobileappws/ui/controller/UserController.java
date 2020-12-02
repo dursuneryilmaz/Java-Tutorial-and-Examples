@@ -1,6 +1,7 @@
 package com.dursuneryilmaz.mobileappws.ui.controller;
 
 import com.dursuneryilmaz.mobileappws.exceptions.UserServiceException;
+import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
@@ -9,6 +10,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("users") // http://localhost:8080/users
@@ -57,12 +61,27 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnedValue = new OperationStatusModel();
         returnedValue.setOperationName(RequestOperationName.DELETE.name());
         userService.deleteUser(id);
         returnedValue.setOperationStatus(RequestOperationStatus.SUCCESS.name());
+        return returnedValue;
+    }
+
+    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        List<UserRest> returnedValue = new ArrayList<>();
+        List<UserDto> userDtoList = userService.getUsers(page, limit);
+
+        for (UserDto userDto : userDtoList) {
+            UserRest userRest = new UserRest();
+            BeanUtils.copyProperties(userDto, userRest);
+            returnedValue.add(userRest);
+        }
         return returnedValue;
     }
 }

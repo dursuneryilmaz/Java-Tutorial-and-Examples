@@ -3,6 +3,8 @@ package com.dursuneryilmaz.mobileappws.service;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
+
 public interface IUserService extends UserDetailsService {
     UserDto createUser(UserDto user);
 
@@ -13,4 +15,6 @@ public interface IUserService extends UserDetailsService {
     UserDto updateUser(String userId, UserDto user);
 
     void deleteUser(String userId);
+
+    List<UserDto> getUsers(int page, int limit);
 }
