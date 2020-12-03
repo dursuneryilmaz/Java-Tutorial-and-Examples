@@ -35,19 +35,20 @@ public class UserController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetail) throws Exception {
-        UserRest returnValue = new UserRest();
         // check specifically unhandled exception handled or not
         if (userDetail.getFirstName().isEmpty()) throw new NullPointerException("dummy text object is null");
        /* //shallow property copying using bean utils
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetail, userDto);
         */
-        //Deep object mapping (coping included list of other objects)
+        //Deep object mapping (copying included list of other objects)
         ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = modelMapper.map(userDetail, UserDto.class);
 
         UserDto createdUser = userService.createUser(userDto);
-        BeanUtils.copyProperties(createdUser, returnValue);
+        //BeanUtils.copyProperties(createdUser, returnValue);
+        UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
+        
         return returnValue;
     }
 
