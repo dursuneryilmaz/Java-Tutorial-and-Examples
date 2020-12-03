@@ -1,6 +1,6 @@
 package com.dursuneryilmaz.mobileappws.ui.model.response;
 
-public class AddressesRest {
+public class AddressRest {
     private String addressId;
     private String city;
     private String country;

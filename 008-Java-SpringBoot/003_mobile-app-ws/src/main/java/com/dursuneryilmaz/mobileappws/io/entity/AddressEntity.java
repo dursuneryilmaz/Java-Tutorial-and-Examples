@@ -4,7 +4,7 @@ package com.dursuneryilmaz.mobileappws.io.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "addresses")
+@Entity(name = "address")
 public class AddressEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +31,7 @@ public class AddressEntity implements Serializable {
     private String type;
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userDetails;
 
     public long getId() {
