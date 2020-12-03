@@ -4,9 +4,11 @@ import com.dursuneryilmaz.mobileappws.exceptions.UserServiceException;
 import com.dursuneryilmaz.mobileappws.io.repository.IUserRepository;
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
+import com.dursuneryilmaz.mobileappws.shared.dto.AddressDto;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.shared.utils.Utils;
 import com.dursuneryilmaz.mobileappws.ui.model.response.ErrorMessages;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.Name;
@@ -33,23 +35,32 @@ public class UserService implements IUserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDto createUser(UserDto user) {
+    public UserDto createUser(UserDto userDto) {
         // check users by email to prevent duplication
-        if (userRepository.findByEmail(user.getEmail()) != null) throw new RuntimeException("Record already exists");
+        if (userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record already exists");
+
+        // Generate publicAddressId for each address' in userDto
+        for (int i = 0; i < userDto.getAddresses().size(); i++) {
+            AddressDto addressDto = userDto.getAddresses().get(i);
+            addressDto.setUserDetails(userDto);
+            addressDto.setAddressId(utils.generateAddressId(32));
+            userDto.getAddresses().set(i, addressDto);
+        }
+
         // encapsulate the db user id from transporting between layers
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
+        //BeanUtils.copyProperties(user, userEntity);
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
 
         //hardcode required fields for test
         String publicUserId = utils.generateUserId(32);
         userEntity.setUserId(publicUserId);
-        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
-        UserDto returnedValue = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, returnedValue);
-
+        //BeanUtils.copyProperties(storedUserDetails, returnedValue);
+        UserDto returnedValue = modelMapper.map(storedUserDetails, UserDto.class);
         return returnedValue;
     }
 
