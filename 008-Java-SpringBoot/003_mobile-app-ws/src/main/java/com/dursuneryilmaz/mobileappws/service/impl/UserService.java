@@ -11,7 +11,6 @@ import com.dursuneryilmaz.mobileappws.ui.model.response.ErrorMessages;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,8 +69,8 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) throw new UsernameNotFoundException(email);
 
-        UserDto returnedValue = modelMapper.map(userEntity, UserDto.class);
-        //BeanUtils.copyProperties(userEntity, returnedValue);
+        UserDto returnedValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnedValue);
         return returnedValue;
     }
 
