@@ -6,6 +6,7 @@ import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import com.dursuneryilmaz.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.dursuneryilmaz.mobileappws.ui.model.response.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,12 +36,16 @@ public class UserController {
     )
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetail) throws Exception {
         UserRest returnValue = new UserRest();
-
-        if (userDetail.getFirstName().isEmpty())
-            // check specifically unhandled exception handled or not
-            throw new NullPointerException("dummy text object is null");
+        // check specifically unhandled exception handled or not
+        if (userDetail.getFirstName().isEmpty()) throw new NullPointerException("dummy text object is null");
+       /* //shallow property copying using bean utils
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetail, userDto);
+        */
+        //Deep object mapping (coping included list of other objects)
+        ModelMapper modelMapper = new ModelMapper();
+        UserDto userDto = modelMapper.map(userDetail, UserDto.class);
+
         UserDto createdUser = userService.createUser(userDto);
         BeanUtils.copyProperties(createdUser, returnValue);
         return returnValue;
