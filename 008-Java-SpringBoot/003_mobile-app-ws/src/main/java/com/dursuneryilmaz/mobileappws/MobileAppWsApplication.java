@@ -1,6 +1,7 @@
 package com.dursuneryilmaz.mobileappws;
 
 import com.dursuneryilmaz.mobileappws.security.AppProperties;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -27,6 +28,11 @@ public class MobileAppWsApplication extends SpringBootServletInitializer {
     @Bean
     public SpringApplicationContext springApplicationContext() {
         return new SpringApplicationContext();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     @Bean(name = "AppProperties")

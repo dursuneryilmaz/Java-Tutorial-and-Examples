@@ -33,6 +33,8 @@ public class UserService implements IUserService {
     Utils utils;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    ModelMapper modelMapper;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -49,7 +51,6 @@ public class UserService implements IUserService {
 
         // encapsulate the db user id from transporting between layers
         //BeanUtils.copyProperties(user, userEntity);
-        ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
 
         //hardcode required fields for test
@@ -69,25 +70,24 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) throw new UsernameNotFoundException(email);
 
-        UserDto returnedValue = new UserDto();
-        BeanUtils.copyProperties(userEntity, returnedValue);
+        UserDto returnedValue = modelMapper.map(userEntity, UserDto.class);
+        //BeanUtils.copyProperties(userEntity, returnedValue);
         return returnedValue;
     }
 
     @Override
     public UserDto getUserByUserId(String userId) {
-        UserDto returnedValue = new UserDto();
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null)
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + ":" + userId);
 
-        BeanUtils.copyProperties(userEntity, returnedValue);
+        //BeanUtils.copyProperties(userEntity, returnedValue);
+        UserDto returnedValue = modelMapper.map(userEntity, UserDto.class);
         return returnedValue;
     }
 
     @Override
     public UserDto updateUser(String userId, UserDto user) {
-        UserDto returnedValue = new UserDto();
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null)
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + ":" + userId);
@@ -95,7 +95,8 @@ public class UserService implements IUserService {
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
         UserEntity updatedUserEntity = userRepository.save(userEntity);
-        BeanUtils.copyProperties(updatedUserEntity, returnedValue);
+        //BeanUtils.copyProperties(updatedUserEntity, returnedValue);
+        UserDto returnedValue = modelMapper.map(updatedUserEntity, UserDto.class);
         return returnedValue;
     }
 
@@ -104,7 +105,6 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity == null) throw new UsernameNotFoundException(email);
-
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), Collections.emptyList());
     }
 
@@ -125,8 +125,8 @@ public class UserService implements IUserService {
         List<UserEntity> userEntities = userPages.getContent();
 
         for (UserEntity userEntity : userEntities) {
-            UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(userEntity, userDto);
+            UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+            //BeanUtils.copyProperties(userEntity, userDto);
             returnedValue.add(userDto);
         }
         return returnedValue;
