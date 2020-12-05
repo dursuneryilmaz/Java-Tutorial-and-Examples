@@ -9,6 +9,7 @@ import com.dursuneryilmaz.mobileappws.ui.model.response.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     IUserService userService;
@@ -107,10 +110,20 @@ public class UserController {
         return returnedValue;
     }
 
-    @GetMapping(path = "/{id}/addresses/{addressId}",
+    @GetMapping(path = "/{userId}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public AddressRest getUserAddress(@PathVariable String id, @PathVariable String addressId) {
+    public AddressRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
         AddressDto addressDto = addressService.getAddressByAddressId(addressId);
-        return modelMapper.map(addressDto, AddressRest.class);
+
+        Link selfLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressId)).withSelfRel();
+        Link userLink = linkTo(methodOn(UserController.class).getUser(userId)).withRel("user");
+        Link addressesLink = linkTo(methodOn(UserController.class).getUserAddresses(userId)).withRel("addresses");
+
+        AddressRest returnedValue = modelMapper.map(addressDto, AddressRest.class);
+        returnedValue.add(selfLink);
+        returnedValue.add(userLink);
+        returnedValue.add(addressesLink);
+
+        return returnedValue;
     }
 }
