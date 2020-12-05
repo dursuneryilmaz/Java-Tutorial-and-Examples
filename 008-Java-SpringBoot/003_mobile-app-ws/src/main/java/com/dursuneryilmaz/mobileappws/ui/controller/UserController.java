@@ -96,18 +96,25 @@ public class UserController {
         return returnedValue;
     }
 
-    @GetMapping(path = "/{id}/addresses",
+    @GetMapping(path = "/{userId}/addresses",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public List<AddressRest> getUserAddresses(@PathVariable String id) {
-        List<AddressRest> returnedValue = new ArrayList<>();
+    public List<AddressRest> getUserAddresses(@PathVariable String userId) {
+        List<AddressRest> addressRests = new ArrayList<>();
 
-        List<AddressDto> addresses = addressService.getAddressesByUserId(id);
+        List<AddressDto> addresses = addressService.getAddressesByUserId(userId);
         if (addresses != null && !addresses.isEmpty()) {
             Type listType = new TypeToken<List<AddressRest>>() {
             }.getType();
-            returnedValue = modelMapper.map(addresses, listType);
+            addressRests = modelMapper.map(addresses, listType);
+
+            for (AddressRest addressRest: addressRests){
+                Link selfLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId())).withSelfRel();
+                addressRest.add(selfLink);
+                Link userLink = linkTo(methodOn(UserController.class).getUser(userId)).withRel("user");
+                addressRest.add(userLink);
+            }
         }
-        return returnedValue;
+        return addressRests;
     }
 
     @GetMapping(path = "/{userId}/addresses/{addressId}",
