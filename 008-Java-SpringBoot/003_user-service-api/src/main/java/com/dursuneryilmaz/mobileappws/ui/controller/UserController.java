@@ -53,8 +53,7 @@ public class UserController {
 
     @PostMapping(
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-    )
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetail) throws Exception {
         // check specifically unhandled exception handled or not
         if (userDetail.getFirstName().isEmpty()) throw new NullPointerException("dummy text object is null");
@@ -73,8 +72,7 @@ public class UserController {
 
     @PutMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-    )
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetail) {
         //BeanUtils.copyProperties(userDetail, userDto);
         UserDto userDto = modelMapper.map(userDetail, UserDto.class);
@@ -85,8 +83,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-    )
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnedValue = new OperationStatusModel();
         returnedValue.setOperationName(RequestOperationName.DELETE.name());
@@ -156,4 +153,19 @@ public class UserController {
 
         return returnedValue;
     }
+
+    @GetMapping(path = "/email-verification",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+        operationStatusModel.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+        boolean isVerified = userService.verifyEmailToken(token);
+        if (isVerified) {
+            operationStatusModel.setOperationStatus(RequestOperationStatus.SUCCESS.name());
+        } else {
+            operationStatusModel.setOperationStatus(RequestOperationStatus.ERROR.name());
+        }
+        return operationStatusModel;
+    }
+
 }
