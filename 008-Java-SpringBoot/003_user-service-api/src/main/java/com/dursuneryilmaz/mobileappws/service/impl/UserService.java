@@ -104,7 +104,10 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity == null) throw new UsernameNotFoundException(email);
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), Collections.emptyList());
+        // prevent login of user who didnt verified email address
+        // return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), Collections.emptyList());
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(),
+                true, true, true, Collections.emptyList());
     }
 
     @Override
