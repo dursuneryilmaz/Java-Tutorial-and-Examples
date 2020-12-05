@@ -30,13 +30,25 @@ public class UserController {
     @Autowired
     IAddressService addressService;
 
-    @GetMapping(path = "/{id}",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public UserRest getUser(@PathVariable String id) {
-        UserDto userDto = userService.getUserByUserId(id);
-        //BeanUtils.copyProperties(userDto, returnValue);
-        UserRest returnValue = modelMapper.map(userDto, UserRest.class);
-        return returnValue;
+    @GetMapping(path = "/{userId}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public UserRest getUser(@PathVariable String userId) {
+        // get users
+        UserDto userDto = userService.getUserByUserId(userId);
+        // map userDto object to userRest object
+        UserRest userRest = modelMapper.map(userDto, UserRest.class);
+        // add link to users addresses
+        for (AddressRest addressRest : userRest.getAddresses()) {
+            Link selfLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId())).withSelfRel();
+            addressRest.add(selfLink);
+        }
+        // add links to user
+        Link selfLink = linkTo(methodOn(UserController.class).getUser(userId)).withSelfRel();
+        Link addressesLink = linkTo(methodOn(UserController.class).getUserAddresses(userId)).withRel("addresses");
+        userRest.add(selfLink);
+        userRest.add(addressesLink);
+
+        return userRest;
     }
 
     @PostMapping(
@@ -83,18 +95,28 @@ public class UserController {
         return returnedValue;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<UserRest> returnedValue = new ArrayList<>();
+    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public CollectionModel<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                              @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        List<UserRest> userRests = new ArrayList<>();
         List<UserDto> userDtoList = userService.getUsers(page, limit);
 
         for (UserDto userDto : userDtoList) {
-            //BeanUtils.copyProperties(userDto, userRest);
+            // map from dto to response object
             UserRest userRest = modelMapper.map(userDto, UserRest.class);
-            returnedValue.add(userRest);
+            // add link to users addresses
+            for (AddressRest addressRest : userRest.getAddresses()) {
+                Link selfLink = linkTo(methodOn(UserController.class).getUserAddress(userRest.getUserId(), addressRest.getAddressId())).withSelfRel();
+                addressRest.add(selfLink);
+            }
+            // add links to user
+            Link selfLink = linkTo(methodOn(UserController.class).getUser(userRest.getUserId())).withSelfRel();
+            Link addressesLink = linkTo(methodOn(UserController.class).getUserAddresses(userRest.getUserId())).withRel("addresses");
+            userRest.add(selfLink);
+            userRest.add(addressesLink);
+            userRests.add(userRest);
         }
-        return returnedValue;
+        return CollectionModel.of(userRests);
     }
 
     @GetMapping(path = "/{userId}/addresses",

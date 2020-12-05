@@ -1,8 +1,10 @@
 package com.dursuneryilmaz.mobileappws.ui.model.response;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.util.List;
 
-public class UserRest {
+public class UserRest extends RepresentationModel<UserRest> {
     private String userId; // different from db user id
     private String firstName;
     private String lastName;
