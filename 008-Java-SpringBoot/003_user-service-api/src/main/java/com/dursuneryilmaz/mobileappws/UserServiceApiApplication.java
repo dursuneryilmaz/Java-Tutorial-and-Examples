@@ -10,14 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class MobileAppWsApplication extends SpringBootServletInitializer {
+public class UserServiceApiApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(MobileAppWsApplication.class);
+        return builder.sources(UserServiceApiApplication.class);
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(MobileAppWsApplication.class, args);
+        SpringApplication.run(UserServiceApiApplication.class, args);
     }
 
     @Bean
