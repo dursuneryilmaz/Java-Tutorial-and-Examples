@@ -49,19 +49,19 @@ public class UserService implements IUserService {
         }
 
         // encapsulate the db user id from transporting between layers
-        //BeanUtils.copyProperties(user, userEntity);
+        // object mapping
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
 
-        //hardcode required fields for test
+        // generate required fields
         String publicUserId = utils.generateUserId(32);
         userEntity.setUserId(publicUserId);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
 
-        UserEntity storedUserDetails = userRepository.save(userEntity);
-        //BeanUtils.copyProperties(storedUserDetails, returnedValue);
-        UserDto returnedValue = modelMapper.map(storedUserDetails, UserDto.class);
-        return returnedValue;
+        UserEntity storedUserEntity = userRepository.save(userEntity);
+        // map entity to dto
+        UserDto storedUserDto = modelMapper.map(storedUserEntity, UserDto.class);
+        return storedUserDto;
     }
 
     @Override
@@ -69,9 +69,9 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) throw new UsernameNotFoundException(email);
 
-        UserDto returnedValue = new UserDto();
-        BeanUtils.copyProperties(userEntity, returnedValue);
-        return returnedValue;
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity, userDto);
+        return userDto;
     }
 
     @Override
@@ -81,8 +81,8 @@ public class UserService implements IUserService {
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + ":" + userId);
 
         //BeanUtils.copyProperties(userEntity, returnedValue);
-        UserDto returnedValue = modelMapper.map(userEntity, UserDto.class);
-        return returnedValue;
+        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+        return userDto;
     }
 
     @Override
@@ -95,8 +95,8 @@ public class UserService implements IUserService {
         userEntity.setLastName(user.getLastName());
         UserEntity updatedUserEntity = userRepository.save(userEntity);
         //BeanUtils.copyProperties(updatedUserEntity, returnedValue);
-        UserDto returnedValue = modelMapper.map(updatedUserEntity, UserDto.class);
-        return returnedValue;
+        UserDto updatedUserDto = modelMapper.map(updatedUserEntity, UserDto.class);
+        return updatedUserDto;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserDto> getUsers(int page, int limit) {
-        List<UserDto> returnedValue = new ArrayList<>();
+        List<UserDto> userDtoList = new ArrayList<>();
         if (page > 0) page -= 1;
         Pageable pageRequest = PageRequest.of(page, limit);
         Page<UserEntity> userPages = userRepository.findAll(pageRequest);
@@ -126,8 +126,8 @@ public class UserService implements IUserService {
         for (UserEntity userEntity : userEntities) {
             UserDto userDto = modelMapper.map(userEntity, UserDto.class);
             //BeanUtils.copyProperties(userEntity, userDto);
-            returnedValue.add(userDto);
+            userDtoList.add(userDto);
         }
-        return returnedValue;
+        return userDtoList;
     }
 }
