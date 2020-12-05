@@ -9,8 +9,12 @@ import com.dursuneryilmaz.mobileappws.ui.model.response.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
@@ -97,8 +101,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/{userId}/addresses",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public List<AddressRest> getUserAddresses(@PathVariable String userId) {
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json", "application/hal+xml"})
+    public CollectionModel<AddressRest> getUserAddresses(@PathVariable String userId) {
         List<AddressRest> addressRests = new ArrayList<>();
 
         List<AddressDto> addresses = addressService.getAddressesByUserId(userId);
@@ -107,18 +111,18 @@ public class UserController {
             }.getType();
             addressRests = modelMapper.map(addresses, listType);
 
-            for (AddressRest addressRest: addressRests){
+            for (AddressRest addressRest : addressRests) {
                 Link selfLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId())).withSelfRel();
                 addressRest.add(selfLink);
                 Link userLink = linkTo(methodOn(UserController.class).getUser(userId)).withRel("user");
                 addressRest.add(userLink);
             }
         }
-        return addressRests;
+        return CollectionModel.of(addressRests);
     }
 
     @GetMapping(path = "/{userId}/addresses/{addressId}",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json", "application/hal+xml"})
     public AddressRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
         AddressDto addressDto = addressService.getAddressByAddressId(addressId);
 
