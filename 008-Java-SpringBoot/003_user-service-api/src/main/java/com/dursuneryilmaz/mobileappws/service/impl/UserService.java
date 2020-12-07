@@ -1,8 +1,11 @@
 package com.dursuneryilmaz.mobileappws.service.impl;
 
 import com.dursuneryilmaz.mobileappws.exceptions.UserServiceException;
+import com.dursuneryilmaz.mobileappws.io.entity.PasswordResetTokenEntity;
+import com.dursuneryilmaz.mobileappws.io.repository.IPasswordResetTokenRepository;
 import com.dursuneryilmaz.mobileappws.io.repository.IUserRepository;
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
+import com.dursuneryilmaz.mobileappws.service.IEmailService;
 import com.dursuneryilmaz.mobileappws.service.IUserService;
 import com.dursuneryilmaz.mobileappws.shared.dto.AddressDto;
 import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
@@ -35,7 +38,9 @@ public class UserService implements IUserService {
     @Autowired
     ModelMapper modelMapper;
     @Autowired
-    GmailService gmailService;
+    IEmailService gmailService;
+    @Autowired
+    IPasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -151,5 +156,54 @@ public class UserService implements IUserService {
             }
         }
         return isVerified;
+    }
+
+    @Override
+    public boolean requestPasswordReset(String email) {
+        boolean isEmailSent = false;
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) return isEmailSent;
+        String token = new Utils().generatePasswordResetToken(userEntity.getUserId());
+
+        PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+        passwordResetTokenEntity.setToken(token);
+        passwordResetTokenEntity.setUserDetails(userEntity);
+        passwordResetTokenRepository.save(passwordResetTokenEntity);
+        isEmailSent = gmailService.sendPasswordResetMail(userEntity.getEmail(), userEntity.getFirstName(), token);
+        return isEmailSent;
+
+    }
+
+    @Override
+    public boolean resetPassword(String token, String password) {
+        boolean returnedValue = false;
+
+        if (Utils.hasTokenExpired(token)) {
+            return returnedValue;
+        }
+
+        PasswordResetTokenEntity passwordResetTokenEntity = passwordResetTokenRepository.findByToken(token);
+
+        if (passwordResetTokenEntity == null) {
+            return returnedValue;
+        }
+
+        // Prepare new password
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+
+        // Update User password in database
+        UserEntity userEntity = passwordResetTokenEntity.getUserDetails();
+        userEntity.setEncryptedPassword(encodedPassword);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+
+        // Verify if password was saved successfully
+        if (savedUserEntity != null && savedUserEntity.getEncryptedPassword().equalsIgnoreCase(encodedPassword)) {
+            returnedValue = true;
+        }
+
+        // Remove Password Reset token from database
+        passwordResetTokenRepository.delete(passwordResetTokenEntity);
+
+        return returnedValue;
     }
 }
