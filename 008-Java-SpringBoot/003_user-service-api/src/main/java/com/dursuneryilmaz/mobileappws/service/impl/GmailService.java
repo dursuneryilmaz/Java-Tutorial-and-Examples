@@ -28,7 +28,7 @@ public class GmailService implements IEmailService {
 
     final String TEXTBODY = "Please Verify Your Email Address"
             + "Thank you for your registration. Please confirm your email address by clicking following link"
-            + "$clientSideVerificationPage?token=$tokenValue";
+            + "http://localhost:8080/mobile-app-ws/users/email-verification?token=$tokenValue";
 
     @Override
     public void sendVerificationEmail(UserDto userDto) {
@@ -38,7 +38,7 @@ public class GmailService implements IEmailService {
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-            mimeMessageHelper.setSubject("Email Verification");
+            mimeMessageHelper.setSubject(SUBJECT);
             mimeMessageHelper.setFrom(new InternetAddress("akdenizsilver@gmail.com"));
             mimeMessageHelper.setTo(userDto.getEmail());
             mimeMessageHelper.setText(htmlBodyWithToken,true);
