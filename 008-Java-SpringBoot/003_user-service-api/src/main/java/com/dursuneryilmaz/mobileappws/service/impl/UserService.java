@@ -34,6 +34,8 @@ public class UserService implements IUserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    GmailService gmailService;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -61,6 +63,7 @@ public class UserService implements IUserService {
         UserEntity storedUserEntity = userRepository.save(userEntity);
         // map entity to dto
         UserDto storedUserDto = modelMapper.map(storedUserEntity, UserDto.class);
+        gmailService.sendVerificationEmail(storedUserDto);
         return storedUserDto;
     }
 
