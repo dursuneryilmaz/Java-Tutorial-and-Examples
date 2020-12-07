@@ -5,5 +5,7 @@ import com.dursuneryilmaz.mobileappws.shared.dto.UserDto;
 import javax.mail.MessagingException;
 
 public interface IEmailService {
-    void sendVerificationEmail(UserDto userDto);
+    boolean sendVerificationEmail(UserDto userDto);
+
+    boolean sendPasswordResetMail(String email, String firstName, String token);
 }
