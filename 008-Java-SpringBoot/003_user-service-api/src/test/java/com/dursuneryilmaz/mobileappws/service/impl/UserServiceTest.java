@@ -9,11 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+ * if main codes changes maven built triggers the testcases and build fails.
+ * */
 class UserServiceTest {
     // this cannot be mocked it must be real object, this provided @InjectMocks annotation.
     @InjectMocks
@@ -44,5 +48,16 @@ class UserServiceTest {
         assertNotNull(userDto);
         // test bean utils works on bussiness logic side
         assertEquals("Dursun", userDto.getFirstName());
+    }
+
+    @Test
+    void getUserByEmail_UsernameNotFoundException() {
+        // test the exception in userService it throws right one
+        when(userRepository.findByEmail(anyString())).thenReturn(null);
+        assertThrows(UsernameNotFoundException.class,
+                () -> {
+                    userService.getUserByEmail("test@test.com");
+                }
+        );
     }
 }
