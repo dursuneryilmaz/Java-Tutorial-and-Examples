@@ -178,7 +178,7 @@ public class UserService implements IUserService {
     public boolean resetPassword(String token, String password) {
         boolean returnedValue = false;
 
-        if (Utils.hasTokenExpired(token)) {
+        if (utils.hasTokenExpired(token)) {
             return returnedValue;
         }
 
