@@ -64,10 +64,11 @@ public class UsersWebServiceEndpointTest {
     void testGetUserDetails() {
         Response response = given()
                 .header("Authorization", authorizationHeader)
+                .pathParam("userId", USER_ID)
                 .contentType(JSON)
                 .accept(JSON)
                 .when()
-                .get(CONTEXT_PATH + "/users/"+userId)
+                .get(CONTEXT_PATH + "/users/{userId}")
                 .andReturn()
                 .then()
                 .statusCode(HTTP_SUCCESS)
