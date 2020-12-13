@@ -76,4 +76,27 @@ class IUserRepositoryTest {
                         user.getFirstName().contains(keyword)
         );
     }
+
+    @Test
+    final void testFindUserFirstNameAndLastNameByKeyword()
+    {
+        String keyword="Er";
+        List<Object[]> users = userRepository.findUserFirstNameAndLastNameByKeyword(keyword);
+        assertNotNull(users);
+        assertTrue(users.size() == 5);
+
+        Object[] selectedColumns = users.get(0);
+        // there is 2 selected column in repository method so size must be equal 2
+        assertTrue(selectedColumns.length == 2);
+        // index is important here to prevent conflict
+        String userFirstName = String.valueOf(selectedColumns[0]);
+        String userLastName = String.valueOf(selectedColumns[1]);
+
+        assertNotNull(userFirstName);
+        assertNotNull(userLastName);
+
+        System.out.println("First name = " + userFirstName);
+        System.out.println("Last name = " + userLastName);
+
+    }
 }
