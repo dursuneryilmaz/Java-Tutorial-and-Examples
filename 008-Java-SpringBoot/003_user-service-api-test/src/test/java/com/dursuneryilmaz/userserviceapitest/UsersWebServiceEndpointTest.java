@@ -81,7 +81,7 @@ public class UsersWebServiceEndpointTest {
         assertNotNull(emailAddress);
         assertEquals(emailAddress, EMAIL_ADDRESS);
 
-        List<Map<String,String>> addresses = response.jsonPath().getList("addresses");
+        List<Map<String, String>> addresses = response.jsonPath().getList("addresses");
         assertTrue(addresses.size() == 2);
 
         String addressId = addresses.get(0).get("addressId");
@@ -121,5 +121,36 @@ public class UsersWebServiceEndpointTest {
         } catch (JSONException e) {
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    @Order(3)
+    void testUpdateUserDetails() {
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("firstName", "Dursun Updated");
+        userDetails.put("lastName", "Eryılmaz");
+
+        Response response = given()
+                .contentType(JSON)
+                .accept(JSON)
+                .header("Authorization", authorizationHeader)
+                .pathParam("userId", USER_ID)
+                .body(userDetails)
+                .when()
+                .put(CONTEXT_PATH + "/users/{userId}")
+                .then()
+                .statusCode(HTTP_SUCCESS)
+                .contentType(JSON)
+                .extract()
+                .response();
+
+        String firstName = response.jsonPath().getString("firstName");
+        String lastName = response.jsonPath().getString("lastName");
+        assertNotNull(firstName);
+        assertNotNull(lastName);
+        assertEquals(firstName, "Dursun Updated");
+
+        List<Map<String, String>> addresses = response.jsonPath().getList("addresses");
+        assertTrue(addresses.size() == 2);
     }
 }
