@@ -2,7 +2,6 @@ package com.dursuneryilmaz.userserviceapitest;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -152,5 +151,31 @@ public class UsersWebServiceEndpointTest {
 
         List<Map<String, String>> addresses = response.jsonPath().getList("addresses");
         assertTrue(addresses.size() == 2);
+    }
+
+    @Test
+    @Order(4)
+    void testDeleteUserDetails() {
+        Response response = given()
+                .header("Authorization", authorizationHeader)
+                .contentType(JSON)
+                .accept(JSON)
+                .pathParam("userId", "dkwMZw5SgklD8WTVJAWH4VSKERdNnOZ0")
+                .when()
+                .delete(CONTEXT_PATH + "/users/{userId}")
+                .then()
+                .statusCode(HTTP_SUCCESS)
+                .contentType(JSON)
+                .extract()
+                .response();
+
+        String operationName = response.jsonPath().getString("operationName");
+        assertNotNull(operationName);
+        assertEquals(operationName, "DELETE");
+
+        String operationStatus = response.jsonPath().getString("operationStatus");
+        assertNotNull(operationStatus);
+        assertEquals(operationStatus, "SUCCESS");
+
     }
 }
