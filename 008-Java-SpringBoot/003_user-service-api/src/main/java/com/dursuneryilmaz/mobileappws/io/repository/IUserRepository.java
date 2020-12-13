@@ -22,6 +22,13 @@ public interface IUserRepository extends PagingAndSortingRepository<UserEntity, 
 
     UserEntity findUserByEmailVerificationToken(String token);
 
+    /* // test to see sql query created by spring data jpa in console
+       // selects user with given userId and selects all all addresess with that userId and deletes childs/addresses
+       // first then deletes actual user record
+    @Transactional
+    @Modifying
+    void deleteByUserId(String userId);
+    */
     @Query(value = "select * from user u where u.email_verification_status='true'",
             countQuery = "select count(*) from user u where u.email_verification_status='true'",
             nativeQuery = true)
@@ -36,18 +43,25 @@ public interface IUserRepository extends PagingAndSortingRepository<UserEntity, 
     List<UserEntity> findUsersByLastName(@Param("lastName") String firstName);
 
     // native sql like expression
-    @Query(value="select * from user u where first_name LIKE %:keyword% or last_name LIKE %:keyword%",nativeQuery=true)
+    @Query(value = "select * from user u where first_name LIKE %:keyword% or last_name LIKE %:keyword%", nativeQuery = true)
     List<UserEntity> findUsersByKeyword(@Param("keyword") String keyword);
 
     // select specific columns from db
-    @Query(value="select u.first_name, u.last_name from user u where u.first_name LIKE %:keyword% or u.last_name LIKE %:keyword%",nativeQuery=true)
+    @Query(value = "select u.first_name, u.last_name from user u where u.first_name LIKE %:keyword% or u.last_name LIKE %:keyword%", nativeQuery = true)
     List<Object[]> findUserFirstNameAndLastNameByKeyword(@Param("keyword") String keyword);
 
     // update query is modifying query and must be transactional
     // if this kind of methods used in service or rest endpoint methods that methods also must be transactional
     @Transactional
     @Modifying
-    @Query(value="update user u set u.email_verification_status=:emailVerificationStatus where u.user_id=:userId", nativeQuery=true)
+    @Query(value = "update user u set u.email_verification_status=:emailVerificationStatus where u.user_id=:userId", nativeQuery = true)
     void updateUserEmailVerificationStatus(@Param("emailVerificationStatus") boolean emailVerificationStatus,
                                            @Param("userId") String userId);
+
+    // same like update, cascade relation needed in db 
+    @Transactional
+    @Modifying
+    @Query(value = "delete from user u where u.user_id=:userId"
+            , nativeQuery = true)
+    void deleteUserWithUserId(@Param("userId") String userId);
 }

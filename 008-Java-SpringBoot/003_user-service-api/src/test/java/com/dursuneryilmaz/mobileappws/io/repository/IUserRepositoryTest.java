@@ -96,7 +96,6 @@ class IUserRepositoryTest {
 
         System.out.println("First name = " + userFirstName);
         System.out.println("Last name = " + userLastName);
-
     }
 
     @Test
@@ -112,6 +111,17 @@ class IUserRepositoryTest {
         boolean storedEmailVerificationStatus = storedUserDetails.getEmailVerificationStatus();
         // check status changed or not
         assertTrue(storedEmailVerificationStatus == newEmailVerificationStatus);
+    }
 
+    @Test
+    final void testDeleteUserWithUserId() {
+        // db user id, test fails second run
+        String userId = "OTAyEB5SIYFM6OyN5xKNhRttu0sjIsNN";
+
+        userRepository.deleteUserWithUserId(userId);
+
+        UserEntity storedUserDetails = userRepository.findByUserId(userId);
+        // check user is null
+        assertTrue(storedUserDetails == null);
     }
 }
