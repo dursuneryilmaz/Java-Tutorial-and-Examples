@@ -1,7 +1,6 @@
 package com.dursuneryilmaz.mobileappws.io.repository;
 
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +24,8 @@ class IUserRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        // if in-memory db used like h2
+        // there should be some codes to store user records to db
     }
 
     @Test
@@ -35,5 +36,17 @@ class IUserRepositoryTest {
         // 4 verified user exist in db but page size set to 2
         List<UserEntity> users = userPages.getContent();
         assertTrue(users.size() == 2);
+    }
+
+    @Test
+    void testFindUsersByFirstName() {
+        String firstName = "Dursun";
+
+        List<UserEntity> users = userRepository.findUsersByFirstName(firstName);
+        assertNotNull(users);
+        assertTrue(users.size() == 5);
+
+        UserEntity userEntity = users.get(0);
+        assertTrue(userEntity.getFirstName().equals(firstName));
     }
 }
