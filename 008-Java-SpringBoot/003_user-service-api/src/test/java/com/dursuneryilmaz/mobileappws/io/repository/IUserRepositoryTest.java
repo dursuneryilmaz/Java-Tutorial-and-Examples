@@ -2,6 +2,7 @@ package com.dursuneryilmaz.mobileappws.io.repository;
 
 import com.dursuneryilmaz.mobileappws.io.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,7 @@ class IUserRepositoryTest {
     }
 
     @Test
+    @Disabled
     final void testUpdateUserEmailVerificationStatus() {
         boolean newEmailVerificationStatus = false;
         // db user id
@@ -114,6 +116,7 @@ class IUserRepositoryTest {
     }
 
     @Test
+    @Disabled
     final void testDeleteUserWithUserId() {
         // db user id, test fails second run
         String userId = "OTAyEB5SIYFM6OyN5xKNhRttu0sjIsNN";
