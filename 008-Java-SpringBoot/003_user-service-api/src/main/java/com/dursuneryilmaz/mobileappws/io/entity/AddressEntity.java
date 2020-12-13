@@ -4,7 +4,9 @@ package com.dursuneryilmaz.mobileappws.io.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "address")
+// fix for jpql query
+@Entity
+@Table(name = "address")
 public class AddressEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

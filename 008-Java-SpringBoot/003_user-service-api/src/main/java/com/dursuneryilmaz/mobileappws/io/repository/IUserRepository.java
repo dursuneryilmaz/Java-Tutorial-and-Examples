@@ -58,10 +58,20 @@ public interface IUserRepository extends PagingAndSortingRepository<UserEntity, 
     void updateUserEmailVerificationStatus(@Param("emailVerificationStatus") boolean emailVerificationStatus,
                                            @Param("userId") String userId);
 
-    // same like update, cascade relation needed in db 
+    // same like update, cascade relation needed in db
     @Transactional
     @Modifying
     @Query(value = "delete from user u where u.user_id=:userId"
             , nativeQuery = true)
     void deleteUserWithUserId(@Param("userId") String userId);
+
+    /*
+     * There is JPQL queries which is almost same as native queries.
+     * in jpql query table name is entity object's name and column names are entity's properties' name
+     *
+     * @Native query : select  * from user u where u.last_name=:lastName
+     * @JPQL query: select  * from UserEntity u where u.lastName=:lastName
+     *
+     * */
+
 }

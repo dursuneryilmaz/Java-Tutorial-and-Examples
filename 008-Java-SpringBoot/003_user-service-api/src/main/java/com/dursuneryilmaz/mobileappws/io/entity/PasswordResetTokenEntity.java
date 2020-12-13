@@ -3,7 +3,9 @@ package com.dursuneryilmaz.mobileappws.io.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "password_reset_token")
+// fix for jpql query
+@Entity
+@Table(name = "password_reset_token")
 public class PasswordResetTokenEntity implements Serializable {
 
     private static final long serialVersionUID = 8051324316462829780L;

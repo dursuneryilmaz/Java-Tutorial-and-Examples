@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "user")
+// fix for jpql query
+@Entity
+@Table(name = "user")
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
