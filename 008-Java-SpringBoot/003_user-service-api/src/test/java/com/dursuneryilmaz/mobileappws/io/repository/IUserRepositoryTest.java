@@ -78,9 +78,8 @@ class IUserRepositoryTest {
     }
 
     @Test
-    final void testFindUserFirstNameAndLastNameByKeyword()
-    {
-        String keyword="Er";
+    final void testFindUserFirstNameAndLastNameByKeyword() {
+        String keyword = "Er";
         List<Object[]> users = userRepository.findUserFirstNameAndLastNameByKeyword(keyword);
         assertNotNull(users);
         assertTrue(users.size() == 5);
@@ -97,6 +96,22 @@ class IUserRepositoryTest {
 
         System.out.println("First name = " + userFirstName);
         System.out.println("Last name = " + userLastName);
+
+    }
+
+    @Test
+    final void testUpdateUserEmailVerificationStatus() {
+        boolean newEmailVerificationStatus = false;
+        // db user id
+        String userId = "SRL9sc6b1gIhiFizP4xr7XMPnzrEoGdK";
+
+        userRepository.updateUserEmailVerificationStatus(newEmailVerificationStatus, userId);
+
+        UserEntity storedUserDetails = userRepository.findByUserId(userId);
+
+        boolean storedEmailVerificationStatus = storedUserDetails.getEmailVerificationStatus();
+        // check status changed or not
+        assertTrue(storedEmailVerificationStatus == newEmailVerificationStatus);
 
     }
 }
