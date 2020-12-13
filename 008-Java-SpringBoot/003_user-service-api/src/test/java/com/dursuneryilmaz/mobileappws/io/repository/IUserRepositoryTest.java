@@ -61,4 +61,19 @@ class IUserRepositoryTest {
         UserEntity userEntity = users.get(0);
         assertTrue(userEntity.getLastName().equals(lastName));
     }
+
+    @Test
+    final void testFindUsersByKeyword() {
+        String keyword = "urs";
+        List<UserEntity> users = userRepository.findUsersByKeyword(keyword);
+        assertNotNull(users);
+        // there is dummy records on db
+        assertTrue(users.size() == 6);
+
+        UserEntity user = users.get(0);
+        assertTrue(
+                user.getLastName().contains(keyword) ||
+                        user.getFirstName().contains(keyword)
+        );
+    }
 }
