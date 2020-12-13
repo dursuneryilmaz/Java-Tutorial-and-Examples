@@ -49,4 +49,16 @@ class IUserRepositoryTest {
         UserEntity userEntity = users.get(0);
         assertTrue(userEntity.getFirstName().equals(firstName));
     }
+
+    @Test
+    void testFindUsersByLastName() {
+        String lastName = "Eryılmaz";
+
+        List<UserEntity> users = userRepository.findUsersByLastName(lastName);
+        assertNotNull(users);
+        assertTrue(users.size() == 4);
+
+        UserEntity userEntity = users.get(0);
+        assertTrue(userEntity.getLastName().equals(lastName));
+    }
 }
