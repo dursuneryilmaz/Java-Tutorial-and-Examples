@@ -16,6 +16,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class UserController {
     @PostMapping(
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetail) throws Exception {
+    public UserRest createUser(@Valid @RequestBody UserDetailsRequestModel userDetail) throws Exception {
         // check specifically unhandled exception handled or not
         if (userDetail.getFirstName().isEmpty()) throw new NullPointerException("dummy text object is null");
        /* //shallow property copying using bean utils
